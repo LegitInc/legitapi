@@ -1,0 +1,144 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+<h1>User Query</h1>
+<hr/>
+<form action="{{ url_for('query') }}" method="POST" class="form-horizontal">
+    <fieldset>
+        {% for field in form %}
+            {{ fancy_with_errors(field) }}            
+        {% endfor %}
+    </fieldset>
+    <div class="form-actions">
+        <button type="submit" class="btn">Search for User</button>
+    </div>
+</form>
+{% if legit_report %}
+<h1>Legit Report</h1>
+<pre>{{ legit_report_pretty }}</pre>
+{% endif %}
+{% if user_sets %}
+    {% for user_set_tuple in user_sets  %}
+        <h1>User {{ loop.index }}</h1>
+        {% with legit_report = user_set_tuple[1], user_set = user_set_tuple[0] %}
+        {% if legit_report %}
+        <table class="table table-bordered">
+            <thead>
+                <th colspan="2">Legit Report</th>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Memberships</td>
+                    <td>{{ legit_report["marketplace_memberships"] }}</td>
+                </tr>
+                <tr>
+                    <td>Total Transactions</td>
+                    <td>{{ legit_report["total_transactions"] }}</td>
+                </tr>
+                <tr>
+                    <td>Total Reviews</td>
+                    <td>{{ legit_report["total_reviews"] }}</td>
+                </tr>
+                <tr>
+                    <td>Overall Positive Review Percentage</td>
+                    <td>{{ legit_report["overall_positive_feedback"]|round(2) }}%</td>
+                </tr>
+                <tr>
+                    <td>Permanent Removals</td>
+                    <td>
+                        {{ legit_report["permanent_removals"]|length }}
+                        {% for removal in legit_report["permanent_removals"] %}
+                            {{ removal[0] }}
+                        {% endfor %}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        {% endif %}
+        
+        <strong>Matching Records</strong><br/>
+        {% for matching_users in user_set %}
+            {% if matching_users %}                
+            <h3>Level {{ loop.index0 }}</h3>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th style="width: 300px">User</th>
+                        <th>Name</th>
+                        <th>Org</th>
+                        <th>Matched Properties</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for matching_user in matching_users %}
+                        {% if matching_user %}                            
+                        <tr>
+                            <td>
+                                {% if DEVELOPMENT %}
+                                    {{ matching_user.user.user_id_enc|dev_decrypt }}
+                                {% else %}
+                                    {{ matching_user.user.user_id[:10] }}...
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if DEVELOPMENT %}
+                                    {{ matching_user.user.name_enc|dev_decrypt }}
+                                {% else %}
+                                    {% if matching_user.user.name %}
+                                        {{ matching_user.user.name[:10] }}...
+                                    {% else %}
+                                        Nameless!
+                                    {% endif %}
+                                {% endif %}
+                            </td>
+                            <td>{{ matching_user.user.org.get().full_name }}</td>
+                            <td>{{ matching_user.fields }}</td>
+                        </tr>
+                        <tr>
+                            {% with user_dict = matching_user.user.to_dict() %}                        
+                            <td colspan="2">
+                                {% for k,v in user_dict.items() %}
+                                    {% if DEVELOPMENT %}
+                                        {% if k and v and k.endswith("_enc") %}
+                                            {% if k[:-4] in matching_user.fields %}
+                                                <strong>    
+                                            {% endif %}                            
+                                            {{ k[:-4] }}: {{ v|dev_decrypt }}
+                                            {% if k[:-4] in matching_user.fields %}
+                                                </strong>
+                                            {% endif %}<br/>
+                                        {% endif %}
+                                    {% else %}
+                                        {% if k and v and (k in PII_FIELDS) %}
+                                            {% if k in matching_user.fields %}
+                                                <strong>    
+                                            {% endif %}                            
+                                            {{ k }}: {{ v }}
+                                            {% if k in matching_user.fields %}
+                                                </strong>
+                                            {% endif %}<br/>
+                                        {% endif %}
+                                    {% endif %}
+
+
+                                {% endfor %}
+                            </td>
+                            <td colspan="2">
+                                {% for field in ("transaction_count", "review_count", "positive_review_percentage", "date_banned") %}
+                                    {{ field }}: {{ user_dict[field] }}<br/>
+                                {% endfor %}
+                            </td>
+                            {% endwith %}
+                        </tr>
+                        {% endif %}                        
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% endif %}            
+        {% endfor %} {# end this user set #}
+        {% endwith %}
+    {% endfor %}{# end user sets #}
+{% else %}
+    <h4 class="subtle">No Matches</h4>
+{% endif %}
+{% endblock content %}

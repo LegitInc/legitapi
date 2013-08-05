@@ -1,0 +1,22 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+<h1>MapReduce Pipelines</h1>
+<hr/>
+<table class="table table-bordered">
+    <tbody>        
+        {% for pipeline_name, pipeline in pipelines  %}
+            <tr>
+                <td>{{ pipeline_name }}</td>
+                <td>
+                    <form action="{{ url_for('mapreduce_processing') }}" method="POST">
+                        <input type="hidden" name="pipeline" value="{{ pipeline }}"></input>
+                        <button type="submit" class="btn">Run It</button>
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock content %}

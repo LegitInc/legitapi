@@ -1,0 +1,39 @@
+{% extends "guides/guide_base.html" %}
+
+{% set active_guide = 'pricing' %}
+{% block guide_content %}
+<h1>Pricing</h1>
+<hr/>
+
+<p>
+    Requesting data from Legit is priced on a per-call basis. Requests cost various
+    amounts depending on what data you request.
+</p>
+<p>
+    The total price of a request is calculated from the individual components
+    included in that request. The cost of the call is simply the total price of
+    all the include components.
+</p>
+<p>
+    Our current per-component price table is shown below. For more information
+    on pricing, please contact us.
+</p>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Component</th>
+            <th>Per-Call Price</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Blacklist</td>
+            <td>Please Call</td>                        
+        </tr>
+        <tr>
+            <td>Reputation</td>
+            <td>Please Call</td>                        
+        </tr>
+    </tbody>
+</table>
+{% endblock guide_content %}

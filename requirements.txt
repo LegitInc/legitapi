@@ -1,0 +1,13 @@
+hg+https://bitbucket.org/simplecodes/wtforms#egg=wtforms
+werkzeug
+flask
+httplib2
+oauth2
+stripe
+blinker
+markdown
+jinja2
+nose
+nosegae
+webtest
+shortuuid

@@ -1,0 +1,62 @@
+@import "bootstrap/variables.less";
+@import "bootstrap/mixins.less";
+
+/** Base  **/
+body {
+/*    padding-top: 40px;*/
+}
+
+footer {
+    color: @grayLight;
+    margin-top: 40px;
+}
+
+.navbar a.brand {
+    img {
+        padding-top: 2px;
+        position: absolute;
+    }
+    span.logo-text {
+        padding-left: 47px;
+    }
+}
+
+.navbar-inner {
+    .border-radius(0px);
+}
+
+.navbar .container {
+    width: 940px;
+}
+
+.form-actions {
+    padding: 0;
+    background: transparent;
+    border: 0;
+}
+
+/** Profile **/
+.undo-notallowed {
+    cursor: auto;
+    border: none;
+}
+
+/** Home **/
+#main-content {
+    padding-top: 30px;
+}
+
+/** API Docs **/
+table.api-table, table.parameter-table {
+    td.resource {
+        width: 30%;
+    }    
+}
+
+pre.prettyprint {
+    padding: 10px;
+}
+
+/*h3.api-category {
+    margin-top: 30px;
+}*/

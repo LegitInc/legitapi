@@ -1,0 +1,39 @@
+{% extends "auth/profile/profile_base.html" %}
+
+{% set active_profile = 'permissions' %}
+
+{% block profile_content %}
+<p>
+    Each resource carries separate permissions. Check this table to ensure you have
+    been granted permission to access the correct resources. If something is 
+    misconfigured, please <a href="mailto:EMAIL">contact us</a>.
+</p>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Permission</th>
+            <th>Description</th>
+            <th>Status</th>            
+        </tr>
+    </thead>
+    <tbody>
+        {% set permissions = (("Identity Risk Assessment", "identity_risk", "Access to the identity_risk resource"),) %}
+        {% for label, permission, desc in permissions %}
+            <tr>
+                <td>
+                    {{ label }}
+                </td>
+                <td>
+                    {{ desc }}
+                </td>
+                {% if permission|lower in user.permissions %}
+                    <td style="background-color: #A5E8A6">Granted</td>
+                {% else %}
+                    <td style="background-color: #F5C6C6">Not Granted</td>
+                {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock profile_content %}

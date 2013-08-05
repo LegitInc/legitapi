@@ -1,0 +1,31 @@
+{% extends "auth/profile/profile_base.html" %}
+
+{% set active_profile = 'credit' %}
+
+{% block profile_content %}
+<p>
+	Credit is shared across all developers in {{ org.full_name }}.
+</p>
+<div class="row">
+    <div class="span3 well">
+        <h1 style="font-size: 36px; line-height: 42px">$ {{ "%.2f"|format(org.credit) }}</h1>
+        <h6>Credit Remaining</h6>		
+		<a class="btn" href="{{ uri_for('profile_credit_add_credit') }}">
+			Add Credit
+		</a>
+    </div>
+    <div class="span3 well">
+    	<h3>Auto-Refill is</h3>
+    	<h2>{% if user.auto_recharge %}
+				<span style="color: green">ON</span>
+			{% else %}
+				<span style="color: red">OFF</span>
+			{% endif %}
+		</h2>
+		<a class="btn" href="{{ uri_for('profile_credit_auto_recharge') }}">
+			{% if user.auto_recharge %}Update{% else %}Enable{% endif %}
+			Auto-Recharge
+		</a>
+    </div>
+</div>
+{% endblock profile_content %}

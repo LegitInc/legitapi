@@ -1,0 +1,73 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+<h1>We can haz value?</h1>
+<hr/>
+<h3>Regenerate Value Profiles</h3>
+<p>Sweet mother of mercy, this is a big dog of a process. It'll probably take a
+    long time to run, but it'll provide sweet sweet insights into the value we
+    provide. Press at your own risk.</p>
+<form action="{{ url_for('kickoff_compute_value') }}" method="POST" class="form-horizontal">
+    <div class="form-actions">
+        <button type="submit" class="btn" tooltip="Save Mars.">Start the Reactor</button>
+    </div>
+</form>
+
+<h3>Value Analysis Processing Status</h3>
+<table class="table table-bordered">
+<thead>
+    <tr>
+        <th>Org</th>
+        <th>Total Users</th>
+        <th>Processed Users</th>
+        <th>Is Running?</th>
+    </tr>
+</thead>
+<tbody>
+{% for summary in summaries %}
+    <tr>
+        <td>{{ summary.org_name }}</td>
+        <td>{{ summary.total_users }}</td>
+        <td>{{ summary.processed_users }}</td>
+        <td>{{ summary.is_running }}</td>        
+    </tr>
+{% endfor %}
+</tbody>
+</table>
+
+{% for summary in summaries %}
+<h3>{{ summary.org_name }}</h3>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th># Of Memberships</th>
+            <th># Of Users</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for k,v in summary.sorted_overlap_counts().items() %}
+            <tr>
+                <td>{{ k }}</td>
+                <td>{{ v }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endfor %}
+
+{% endblock content %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

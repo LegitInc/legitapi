@@ -1,0 +1,27 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+<h1>Developers</h1>
+<hr/>
+<h3>Current Developers</h3>
+<div>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Email</th>
+                <th>Organization</th>
+                <th>Permissions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for dev in developers %}
+            <tr>
+                <td><a href="{{ url_for('developer_management', developer_key=dev.key.urlsafe()) }}">{{ dev.email }}</a></td>
+                <td>{{ dev.org.get().full_name }}</td>
+                <td>{% if dev.permissions %}{{ dev.permissions }}{% else %}<span class="muted">None</span>{% endif %}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock content %}

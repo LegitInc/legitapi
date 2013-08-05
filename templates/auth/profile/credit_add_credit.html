@@ -1,0 +1,164 @@
+{% extends "auth/profile/profile_base.html" %}
+
+{% set active_profile = 'credit' %}
+
+{% set card_icons = {
+        "Visa": "visa_32.png",
+        "MasterCard":"mastercard_32.png",
+        "American Express":"american_express_32.png",
+        "Discover":"discover_32.png",
+        "JCB":"jcb_32.png",
+        "Diners Club":"diners_club_32.png",
+} %}
+
+{% block head %}
+{{ super() }}
+
+<script type="text/javascript" src="https://js.stripe.com/v1/"></script>
+<script type="text/javascript">
+    // Stripe Key
+    Stripe.setPublishableKey('STRIPE KEY');
+</script>
+<script type="text/javascript">
+function stripeResponseHandler(status, response) {
+    if (response.error) {
+        $(".credit-submit").removeAttr("disabled");
+        $(".credit-form-processing").hide();
+        $(".credit-form-errors").text(response.error.message).show();        
+    } else {
+        var form$ = $("#credit-form");
+        var token = response["id"];        
+        form$.append("<input type='hidden' name='stripeToken' value='" + token + "'/>");
+        form$.get(0).submit();
+    }
+}
+$(document).ready(function(){
+    $("#credit-form").submit(function(event) {
+        $(".credit-form-serverside-errors").remove();
+        $(".credit-submit").attr("disabled","disabled");
+        $(".credit-form-processing").show();        
+        
+        if (!$("#credit-card-new-card").attr("checked")) {
+            return true;
+        }        
+
+        Stripe.createToken({
+           number: $(".card-number").val(),
+           cvc: $(".card-cvc").val(),
+           exp_month: $(".card-expiry-month").val(),
+           exp_year: $(".card-expiry-year").val()
+        }, stripeResponseHandler);  
+        
+        return false;
+    });
+    
+    
+    $("input[name='credit-card-radios']").change(function(event) {
+        var show = $("#credit-card-new-card").attr("checked");
+        if (show) {
+            $("#new-card-controls").show();
+        } else {
+            $("#new-card-controls").hide();
+        }
+        
+    });
+    
+    $(".card-remove-link").click(function(event) {
+        event.preventDefault();
+        $("form"+this.hash).submit();
+    });
+});
+</script>
+
+<style type="text/css">
+#credit-form input.card-radio {
+    margin-top: 9px;
+}
+#credit-form label.saved-card img{
+	vertical-align: middle;
+}
+</style>
+{% endblock head %}
+
+{% block profile_content %}
+<div class="row">
+    <div class="span6">
+        <h3>Add Credit</h3>
+		<p>
+			Add credit to your account with a one-time payment. To enable recurring payments
+			enable <a href="{{ uri_for('profile_credit_auto_recharge') }}">auto-recharge</a>.
+			Note that credit is shared across your entire organization. 
+		</p>
+		<br/>
+        <div class="credit-form-errors alert alert-error" style="display:none"></div>
+        {% for message in messages['error'] %}
+            <div class="credit-form-serverside-errors alert alert-error">{{ message }}</div>
+        {% endfor %}        
+        <form class="form-horizontal" id="credit-form" method="POST" action="{{ uri_for('profile_process_credit') }}">
+            <fieldset>
+                <div class="control-group">
+                    <label class="control-label">Amount</label>
+                    <div class="controls">
+                        <select name="credit-amount">
+                            {% for amt in (20,40,60,80,100,200,500,1000) %}
+                                <option value="{{amt}}">$ {{ "%.2f"|format(amt) }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>                
+                <div class="control-group">
+                    <label class="control-label">Credit Card</label>
+                    <div class="controls">
+                        {% for card in saved_cards %}
+                        {% set card_icon = card_icons.get(card["type"],"credit_cards_32.png") %}                
+                        <label class="radio saved-card">
+                            <input type="radio" class="card-radio" name="credit-card-radios" value="{{card['customer_id']}}"{% if loop.first %}checked{% endif %}>
+                            <img src="/static/img/{{ card_icon }}" /> **** **** **** {{ card["last4"]}}
+                            <span class="muted" style="padding-left: 10px">Exp</span> {{ card["exp_month"]}}/{{ card["exp_year"] }}                            
+                            <a href="#remove-card-{{ card['customer_id'] }}" class="card-remove-link" style="margin-left: 20px">Remove</a>                            
+                        </label>
+                        {% endfor %}
+                        <label class="radio">
+                            <input type="radio" name="credit-card-radios" id="credit-card-new-card" value="new_card" {% if not saved_cards %}checked{% endif %}>
+                            New card...
+                        </label>
+                    </div>
+                </div>
+                <div id="new-card-controls" {% if saved_cards %}style="display: none"{% endif %}>
+                    <div class="control-group">
+                        <label class="control-label">Card Number</label>
+                        <div class="controls">
+                            <input type="text" autocomplete="off" class="input-xlarge card-number">
+                        </div>
+                    </div>
+                    <div class="control-group">                
+                        <label class="control-label">CVC</label>
+                        <div class="controls">
+                            <input type="text" autocomplete="off" class="input-small card-cvc">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="">Expiration (MM/YYYY)</label>
+                        <div class="controls">
+                            <input type="text" autocomplete="off" class="input-small card-expiry-month">
+                            <span> / </span>
+                            <input type="text" autocomplete="off" class="input-small card-expiry-year">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary credit-submit">Charge My Card</button>
+                    <span class="credit-form-processing" style="display:none">
+                        <img style="padding-left: 10px" src="/static/img/processing.gif"> Processing...
+                    </span>
+                </div>
+            </fieldset>
+        </form>
+        {% for card in saved_cards %}
+            <form action="{{ uri_for('profile_remove_card') }}" id="remove-card-{{ card['customer_id'] }}" method="POST">
+                <input type="hidden" name="customer_id" value="{{ card['customer_id'] }}" />
+            </form>
+        {% endfor %}
+    </div>
+</div>
+{% endblock profile_content %}

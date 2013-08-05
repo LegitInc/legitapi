@@ -1,0 +1,14 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+<h1>Run Task</h1>
+<hr/>
+<form action="{{ url_for('run_task') }}" method="POST" class="form-horizontal">
+    <fieldset>
+        {{ fancy_with_errors(form.task_func)}}
+    </fieldset>
+    <div class="form-actions">
+        <button type="submit" class="btn">Run Task</button>
+    </div>
+</form>
+{% endblock content %}

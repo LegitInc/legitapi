@@ -1,0 +1,95 @@
+{% macro with_errors(field) %}
+    {% if field.errors %}
+        {% set css_class = 'error ' + kwargs.pop('class', '') %}
+        {{ field(class=css_class, **kwargs) }}
+        <ul class="error">{% for error in field.errors %}<li>{{ error|e }}</li>{% endfor %}</ul>
+    {% else %}
+        {{ field(**kwargs) }}
+    {% endif %}
+{% endmacro %}
+
+{% macro fancy_with_errors(field, help_text=None, display_optional=False) %}
+    <div class="control-group {% if field.errors %}error{% endif %}">
+        <label class="control-label" for="{{ field.label.field_id }}">
+			{# {% if display_optional and field.flags.required %}<strong>{% endif %} #}
+			{{ field.label.text }}
+			{# {% if display_optional and field.flags.required %}</strong>{% endif %} #}
+			{% if display_optional and not field.flags.required %}
+				<br/><span class="muted">optional</span>
+			{% endif %}
+		</label>
+        <div class="controls">
+            {{ field(**kwargs) }}
+            {% if field.errors %}
+                <ul class="help-block">{% for error in field.errors %}<li>{{ error|e }}</li>{% endfor %}</ul>
+            {% endif %}
+            {% if help_text %}
+            <p class="help-block">
+                {{ help_text|safe }}
+            </p>
+            {% endif %}            
+        </div>
+    </div>
+{% endmacro %}
+
+<!DOCTYPE html>
+<html>
+<head>
+{% block head %}
+    <title>{% block title %}Legit Dev{% endblock title %}</title>
+    
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <script type="text/javascript" src="/static/js/jquery-1.7.1.min.js"></script>
+    <script type="text/javascript" src="/static/js/bootstrap-modal.js"></script>
+    <script type="text/javascript" src="/static/js/bootstrap-tab.js"></script>
+    
+
+    <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="/static/css/prettify.css" />
+    <link rel="stylesheet" type="text/css" href="/static/css/style.css" />    
+{% endblock head %}
+
+</head>
+<body onload="prettyPrint()" class="{% block bodyclass %}{% endblock bodyclass %}">
+    <div class="navbar {# navbar-fixed-top #}">
+        <div class="navbar-inner">
+            <div class="container">
+                <a class="brand" href="{{ uri_for('home') }}#">
+                    {# Legit Dev #}
+                    <img id="logo" src="/static/img/legit_logo_white_topbar.png">
+                    <span class="logo-text">Developers</span>
+                </a>
+                <ul class="nav">
+                    <li {% if active_nav == 'home' %}class="active"{% endif %}><a href="{{ uri_for('home') }}">Home</a></li>
+                    <li class="{% if active_nav == 'api' %}active{% endif %}"><a href="{{ uri_for('doc_apis') }}">API Documentation</a></li>
+                    <li><a href="mailto:EMAIL">Contact Us</a></li>
+                </ul>
+                <ul class="nav pull-right">
+                    {% if user %}
+                        <li {% if active_nav == 'profile' %}class="active"{% endif %}><a href="{{ uri_for('profile') }}">{{ user.email }}</a></li>
+                        <li><a href="{{ uri_for('logout') }}">Logout</a></li>
+                    {% else %}
+                        <li {% if active_nav == 'signup' %}class="active"{% endif %}><a href="{{ uri_for('signup') }}">Sign Up</a></li>
+                        <li {% if active_nav == 'login' %}class="active"{% endif %}><a href="{{ uri_for('login') }}">Login</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="container" id="main-content">
+        {% block content %} {% endblock content %}
+    </div>
+    
+    <div class="container">
+        <footer>
+            <hr/>
+            &copy; 2012 Legit, Inc.            
+        </footer>
+    </div>
+    <script type="text/javascript" src="/static/js/prettify.js"></script>
+</body>
+</html>

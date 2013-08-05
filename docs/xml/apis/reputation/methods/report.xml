@@ -1,0 +1,125 @@
+<Method>
+    <Name>report</Name>
+    <Category>Resources</Category>
+    <HttpMethod>GET</HttpMethod>
+    <ShortDescription>Queries the LRG database for a reputation report on the given user.</ShortDescription>
+    <Description>
+Queries the LRG database for a reputation report on the given user. Will return both aggregate activity
+across LRG marketplaces as well as any marketplaces on which the user has been blacklisted. 
+
+There is no minimum amount of identifying information required, but the more identity parameters provided
+the higher the probability of finding a match within the LRG database.
+    </Description>
+    <Parameters>
+        <Parameter>
+            <Name>name</Name>
+            <Required>False</Required>
+            <Description>The user's full name.</Description>
+            <ExampleValue>Rob Boyle</ExampleValue>
+        </Parameter>
+        <Parameter>
+            <Name>address</Name>
+            <Required>False</Required>
+            <Description>User's street address.</Description>
+            <ExampleValue>123 1st St. Chicago, IL 60611</ExampleValue>
+        </Parameter>
+        <Parameter>
+            <Name>phone_number</Name>
+            <Required>False</Required>
+            <Description>User's phone number. Must follow the E.164 format of +[country_code][area_code][phone_number].</Description>
+            <ExampleValue>+14157891254</ExampleValue>
+        </Parameter>
+        <Parameter>
+            <Name>email</Name>
+            <Required>False</Required>
+            <Description>User's email address. </Description>
+            <ExampleValue>robboyle@awesomemail.com</ExampleValue>
+        </Parameter>
+        <Parameter>
+            <Name>ssn</Name>
+            <Required>False</Required>
+            <Description>
+User's social security number. Must consist only of numeric digits with out spaces, periods, or dashes.
+            </Description>
+            <ExampleValue>123121234</ExampleValue>
+        </Parameter>
+        <Parameter>
+            <Name>drivers_license</Name>
+            <Required>False</Required>
+            <Description>User's drivers license number. Must follow the format of [state abbreviation]:[license number]</Description>
+            <ExampleValue>CA:D12312345</ExampleValue>
+        </Parameter>
+        <Parameter>
+            <Name>facebook_id</Name>
+            <Required>False</Required>
+            <Description>
+User's facebook id. Note that this is their facebook user ID, a number, not their facebook username which can be any string.
+            </Description>
+            <ExampleValue>2031135</ExampleValue>
+        </Parameter>
+        <Parameter>
+            <Name>twitter_id</Name>
+            <Required>False</Required>
+            <Description>User's twitter id. Note that this is their twitter ID, a number, not their twitter username/handle.</Description>
+            <ExampleValue>3456345784567</ExampleValue>
+        </Parameter>
+        <Parameter>
+            <Name>linkedin_id</Name>
+            <Required>False</Required>
+            <Description>User's linkedin id. Note that this is their linkedin ID, a number, not their linkedin username.</Description>
+            <ExampleValue>12498235</ExampleValue>
+        </Parameter>
+    </Parameters>
+    <ExampleRequest>
+        <RequestData>
+            components=blacklist,reputation&amp;id=12344553&amp;name=Rob+Boyle&amp;address=123+Michigan+Ave%2C+Chicago+IL+60611
+            &amp;phone_number=%2B141512312345&amp;email=robboyle%40awesomemail.com
+            &amp;ssn=123121234&amp;drivers_license=CA%3A1231234&amp;facebook_id=2031135
+            &amp;twitter_id=3456345784567&amp;linkedin_id=12498235
+        </RequestData>
+        <ResponseContent>
+200 OK
+
+{
+    "legit_score": 35,
+    "reputation": {
+        "marketplace_memberships": 2,
+        "total_transactions": 87,
+        "total_reviews": 23,
+        "overall_positive_feedback": 73.9,
+        "blacklistings": [
+            {
+                "date": "2010-04-15",
+                "marketplace_type": "Toaster Sharing",
+                "severity": 5,
+                "reason_code": "THEFT",
+                "reason": "Repeated theft of goods from other members."            },
+        ],
+        "categories": {
+            "Toaster Sharing": {
+                "marketplace_memberships": 1,
+                "total_transactions": 23,
+                "total_reviews": 13,
+                "overall_positive_feedback": 53.2,
+                "blacklistings": [
+                    {
+                        "date": "2010-04-15",
+                        "severity": 5,
+                        "reason_code": "THEFT",
+                        "reason": "Repeated theft of goods from other members."
+                    },
+                ],
+            },
+            "Ride Sharing": {
+                "marketplace_memberships": 1,
+                "total_transactions": 64,
+                "total_reviews": 10,
+                "overall_positive_feedback": 85.6,
+                "blacklistings": [],
+            }
+        }   
+    }
+}            
+        </ResponseContent>
+    </ExampleRequest>
+</Method>

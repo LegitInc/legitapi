@@ -1,0 +1,15 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+<h1>Price - {{ price.name}}</h1>
+<hr/>
+<form action="{{ url_for('price_management', price_key=price.key.urlsafe()) }}" method="POST" class="form-horizontal">
+    <fieldset>
+        {{ fancy_with_errors(form.name)}}
+        {{ fancy_with_errors(form.price)}}
+    </fieldset>
+    <div class="form-actions">
+        <button type="submit" class="btn">Update Price</button>
+    </div>
+</form>
+{% endblock content %}

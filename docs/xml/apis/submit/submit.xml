@@ -1,0 +1,17 @@
+<API>
+    <Name>Submit</Name>
+    <Description>
+        The submit methods allow Legit partners to send data to Legit. This data is aggregated, analyzed,
+        and made available via the the query methods. Each submit method requires a set of identifiers to be
+        passed in so a user can be correlated across organizations. The more identifiers that can be provided for 
+        a user the more easily that user can be connected with users in other systems. As such, always provide
+        as much identifying information for a user as is available.
+    </Description>
+    <BaseURL>https://APP_URL/api/v1/submit/</BaseURL>
+    <Categories>
+        <Category>
+            <Name>Resources</Name>
+            <Description>Methods for submitting user data to Legit.</Description>
+        </Category>
+    </Categories>
+</API>

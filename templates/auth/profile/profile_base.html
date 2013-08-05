@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% set active_nav = "profile" %}
+{% set org = user.org.get() %}
+
+{% block content %}
+<div class="pull-right well" style="padding: 7px 10px; margin: 0">
+        <h2 class="pull-left">$ {{ "%.2f"|format(org.credit) }}</h2>
+        {# <h6 class="pull-left" style="line-height: 13px; padding: 5px 0px 0px 10px">Credit<br/>Remaining</h6> #}
+        <a class="btn pull-left" style="margin: 3px 0 0 10px" href="{{ uri_for('profile_credit_add_credit') }}">Add Credit</a>        
+</div>
+<div style="padding-top: 0px">
+    <h1>{{ user.name }}</h1>
+    <h6>{{ org.full_name }} &middot; {{ user.email }}</h6>
+</div>
+<hr style="margin-top: 10px"/>
+{% set profile_nav = [
+    (uri_for('profile_credentials'), 'icon-th-list', 'credentials', 'API Credentials'),
+    (uri_for('profile_settings'), 'icon-cog', 'settings', 'Settings'),
+    (uri_for('profile_credit'), 'icon-barcode', 'credit', 'Credit'),
+    (uri_for('profile_permissions'), 'icon-lock','permissions', 'Permissions'),
+] %}
+<div class="row" style="min-height: 400px">
+    <div class="span2">
+        <div class="well pull-left" style="padding:5px 0; width: 160px;">
+            <ul id="profile-nav" class="nav nav-list">
+                {% for href, icon, id, label in profile_nav %}
+                    <li {% if id == active_profile %}class="active"{% endif %}>
+                        <a href="{{ href }}">
+                            <i class="{{ icon }} {% if id == active_profile %}icon-white{% endif %}"></i> 
+                            {{ label }}
+                        </a>
+                    </li>                            
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    <div class="span9" style="padding-left: 40px">
+        {% for message in messages['local'] %}
+            <p class="alert">{{ message }}</p>
+        {% endfor %}
+        {% block profile_content %}{% endblock profile_content %}
+    </div>
+</div>
+{% endblock content %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

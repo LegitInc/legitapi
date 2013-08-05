@@ -1,0 +1,31 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+<h1>Developer - {{ developer.email}}</h1>
+<hr/>
+<table class="table" style="margin: 40px 0">
+    <thead>
+        <tr>
+            <th>Consumer Key</th>
+            <th>Consumer Secret</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>{{ developer.consumer_key }}</td>
+            <td>{{ developer.consumer_secret }}</td>
+        </tr>
+    </tbody>
+</table>
+<form action="{{ url_for('developer_management', developer_key=developer.key.urlsafe()) }}" method="POST" class="form-horizontal">
+    <fieldset>
+        {{ fancy_with_errors(form.name)}}
+        {{ fancy_with_errors(form.permissions)}}
+        {{ fancy_with_errors(form.password)}}
+		{{ fancy_with_errors(form.is_admin)}}
+    </fieldset>
+    <div class="form-actions">
+        <button type="submit" class="btn">Update User</button>
+    </div>
+</form>
+{% endblock content %}

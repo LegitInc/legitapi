@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{#     (uri_for('overview'), 'overview', 'Overview'), #}
+{#    (uri_for('submitting'), 'submitting', 'Submitting Data'),#}
+
+{% set guide_nav = [
+	(uri_for('overview'), 'overview', 'Overview of the API'),
+    (uri_for('querying'), 'querying', 'Making a Query'),
+	(uri_for('submitting'), 'submitting', 'Submitting Data'),
+    (uri_for('authentication'), 'authentication', 'Authentication Details'),
+] %}
+
+{% block content %}
+<div class="row">
+    <div class="span9">
+        {% block guide_content %} {% endblock guide_content %}
+    </div>
+    <div class="offset1 span2">
+        <div style="position: fixed; width: 140px;">
+            <div class="well pull-right" style="padding:5px 0; width: 160px;">
+                <ul class="nav nav-list">
+                    <li class="nav-header">Guides</li>
+                    {% for href, id, label in guide_nav %}
+                        <li {% if id == active_guide %}class="active"{% endif %}><a href="{{ href }}">{{ label }}</a></li>                            
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

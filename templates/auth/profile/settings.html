@@ -1,0 +1,33 @@
+{% extends "auth/profile/profile_base.html" %}
+
+{% set active_profile = 'settings' %}
+
+{% block profile_content %}
+<p>
+    Changing your email will require you to log in with your new email the next time you visit. Your API 
+    keys will not be affected.
+</p>
+<form method="POST" action="{{ uri_for('profile_settings_contact') }}" class="form-horizontal">
+    <fieldset>
+        <h3>Contact Info</h3><br/>
+        {{ fancy_with_errors(contact_form.name) }}
+        {{ fancy_with_errors(contact_form.email) }}
+    </fieldset>
+    <div class="form-actions">
+        <button type="submit" class="btn">Update Contact Info</button>
+    </div>
+</form>
+<form method="POST" action="{{ uri_for('profile_settings_password') }}" class="form-horizontal">
+    <fieldset>
+        <h3>Change Password</h3><br/>
+        {{ fancy_with_errors(password_form.current_password) }}
+        {{ fancy_with_errors(password_form.new_password) }}
+        {{ fancy_with_errors(password_form.confirm_password) }}
+    </fieldset>
+    <div class="form-actions">
+        <button type="submit" class="btn">Change Password</button>
+    </div>
+</form>
+
+
+{% endblock profile_content %}

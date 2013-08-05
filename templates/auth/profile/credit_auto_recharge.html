@@ -1,0 +1,105 @@
+{% extends "auth/profile/profile_base.html" %}
+
+{% set active_profile = 'credit' %}
+
+{% set card_icons = {
+        "Visa": "visa_32.png",
+        "MasterCard":"mastercard_32.png",
+        "American Express":"american_express_32.png",
+        "Discover":"discover_32.png",
+        "JCB":"jcb_32.png",
+        "Diners Club":"diners_club_32.png",
+} %}
+
+{% block head %}
+{{ super() }}
+
+<script type="text/javascript">
+$(document).ready(function(){
+	$("#is_auto_recharge").change(function() {
+		// sel = "#credit-form input[id!=is_auto_recharge], #credit-form select";
+		// if(this.checked) {
+		// 	$(sel).removeAttr("disabled");
+		// 	$("#credit-form").removeClass("muted");
+		// } else {
+		// 	$(sel).attr("disabled","disabled");			
+		// 	$("#credit-form").addClass("muted");
+		// }
+		$("#auto-recharge-settings").toggle(this.checked);
+	});
+	$("#is_auto_recharge").change();	
+
+    $(".card-remove-link").click(function(event) {
+        event.preventDefault();
+        $("form"+this.hash).submit();
+    });	
+});
+</script>
+
+<style type="text/css">
+#credit-form input.card-radio {
+    margin-top: 9px;
+}
+#credit-form label.saved-card img{
+	vertical-align: middle;
+}
+</style>
+{% endblock head %}
+
+{% block profile_content %}
+<div class="row">
+    <div class="span6">
+		<h3>Auto-Recharge</h3>
+		<p>
+			Auto-recharge enables us to add credit to your account when it drops below
+			an amount you specify. Enabling it alleviates the need to manually add credit
+			to your account. Instead credit will be deducted as needed.
+		</p>
+		<br/>
+		{% if not saved_cards %}
+			<p class="well">
+				In order to enable auto-recharge, you must have a credit card on file. To place
+				a card on file, first use it to 
+				<a href="{{ uri_for('profile_credit_add_credit') }}">add credit</a>. 
+				<br/><br/>
+				This let's
+				us know for sure that there are no issues with our billing system processing the
+				card, ensuring that auto-rechage will work smooth as butter.
+			</p>
+		{% else %}
+	    	<form id="credit-form" method="POST" action="{{ uri_for('profile_update_auto_recharge') }}">
+				<p>
+					<label class="checkbox">	
+						{{ form.is_auto_recharge }}	Enable auto-recharge
+					</label>
+				</p>
+				<div id="auto-recharge-settings">
+					<p>
+						Add {{ form.auto_recharge_incr }} of credit<br/>
+						when my balance drops below {{ form.auto_recharge_min }}
+						<br/><br/>
+						<strong>Auto-recharge Card</strong>
+						{% for card in saved_cards %}              
+			            {% set card_icon = card_icons.get(card["type"],"credit_cards_32.png") %}  					
+			            <label class="radio saved-card">
+			                <input type="radio" class="card-radio" name="credit-card-radios" value="{{card['customer_id']}}"
+								{% if card['customer_id'] == user.auto_recharge_custid %}checked{% endif %}>
+			                <img src="/static/img/{{ card_icon }}" /> **** **** **** {{ card["last4"]}}
+			                <span class="muted" style="padding-left: 10px">Exp</span> {{ card["exp_month"]}}/{{ card["exp_year"] }}                            
+			                <a href="#remove-card-{{ card['customer_id'] }}" class="card-remove-link" style="margin-left: 20px">Remove</a>                            
+			            </label>
+			            {% endfor %}
+					</p>
+				</div>				
+				<br/>	
+				<button type="submit" class="btn" >Update Auto-Recharge Settings</button>								
+			</form>
+	        {% for card in saved_cards %}
+	            <form action="{{ uri_for('profile_remove_card') }}" id="remove-card-{{ card['customer_id'] }}" method="POST">
+	                <input type="hidden" name="customer_id" value="{{ card['customer_id'] }}" />
+	            </form>
+	        {% endfor %}		
+		{% endif %}
+    </div>
+</div>
+{% endblock profile_content %}

@@ -1,0 +1,35 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+<h1>Prices</h1>
+<hr/>
+<form action="{{ url_for('prices_management') }}" method="POST" class="form-horizontal">
+    <fieldset>
+        {{ fancy_with_errors(form.name)}}
+        {{ fancy_with_errors(form.price) }}
+    </fieldset>
+    <div class="form-actions">
+        <button type="submit" class="btn">Create Price</button>
+    </div>
+</form>
+
+<h3>Existing Prices</h3>
+<div>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for price in existing_prices %}
+            <tr>
+                <td><a href="{{ url_for('price_management', price_key=price.key.urlsafe()) }}">{{ price.name }}</td>
+                <td>{{ price.price }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock content %}

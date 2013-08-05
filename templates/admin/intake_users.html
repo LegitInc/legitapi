@@ -1,0 +1,18 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+<h1>Intake User Upload</h1>
+<hr/>
+<form action="{{ url_for('intake_users') }}" method="POST" enctype="multipart/form-data" class="form-horizontal">
+    <fieldset>
+        {{ fancy_with_errors(form.intake_users) }}
+    </fieldset>
+    <div class="form-actions">
+        <button type="submit" class="btn">Transmit Users to Vladimir</button>
+    </div>
+</form>
+{% if result %}
+<strong>Result</strong><br/>
+{{ result }}
+{% endif %}
+{% endblock content %}

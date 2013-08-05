@@ -1,0 +1,38 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+<h1>Organizations</h1>
+<hr/>
+<form action="{{ url_for('organizations_management') }}" method="POST" class="form-horizontal">
+    <fieldset>
+        {{ fancy_with_errors(form.full_name)}}
+        {{ fancy_with_errors(form.short_name) }}
+        {{ fancy_with_errors(form.org_type) }}
+    </fieldset>
+    <div class="form-actions">
+        <button type="submit" class="btn">Create Organization</button>
+    </div>
+</form>
+<h3>Existing Organizations</h3>
+<div>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Organization Name</th>
+                <th>Short Name</th>
+                <th>Credit</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for org in existing_orgs %}
+            <tr>
+                <td><a href="{{ url_for('organization_management', organization_key=org.key.urlsafe()) }}">{{ org.full_name }}</td>
+                <td>{{ org.name }}</td>
+                <td>{{ org.org_type }}</td>
+                <td>{{ org.credit }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock content %}

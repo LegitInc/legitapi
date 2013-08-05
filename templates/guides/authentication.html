@@ -1,0 +1,58 @@
+{% extends "guides/guide_base.html" %}
+
+{% set active_guide = 'authentication' %}
+{% block guide_content %}
+
+<h1>Authentication Details</h1>
+<hr/>
+<h3>OAuth 1.0a</h3>
+<p>
+    All API calls are authenticated using OAuth 1.0a. When you create a developer account you will receive an oauth key/secret pair.
+    This key/secret pair is used to authenticate the API calls you make.    
+    For detailed information on the OAuth protocol see the <a href="http://oauth.net">official OAuth site</a>.
+</p>
+<br/>
+
+<h3>Legit's OAuth Implementation</h3>
+<p>
+    Using OAuth to connect to Legit is much simpler than many OAuth based APIs (such as twitter and facebook) because
+    you are not connecting on behalf of a user. OAuth is simply used to sign and authenticate requests, confirming the identity of the caller (you). 
+    Calls will only require your consumer key/secret and not a user's access token/secret. We chose OAuth rather than
+    HTTP Authentication as it allows for request signing, which adds additional security to API calls.
+</p>
+<p>
+    Using OAuth only for authentication and not to act on behalf of a user is sometimes referred to as "0-legged" OAuth. 
+    <a href="http://blog.nerdbank.net/2011/06/what-is-2-legged-oauth.html">This excellent blog post</a> describes
+    3, 2, and 0 legged OAuth implementations in more detail.
+</p>
+<br/>
+
+<h3>3rd Party Libraries</h3>
+<p>
+    We highly recommend that you use a 3rd-party OAuth library for your language of choice to aid in making API calls (really, it's worth it). 
+    OAuth.net maintains a <a href="http://oauth.net/code">list of oauth libraries</a> for various languages.
+    If you would really like to know how to form an OAuth request yourself, Twitter has an excellent description
+    of <a href="https://dev.twitter.com/docs/auth/authorizing-request">creating an OAuth1.0a request</a>. If this doesn't convince you
+    to use a library, we don't know what will.
+</p>
+<br/>
+       
+<h3>Debugging Authentication Errors</h3>
+<p>
+    If your OAuth request is badly formatted, our API will return a 400: Bad Request error and attempt to pinpoint what part
+    of the request was malformed. 
+</p>    
+<p>
+    If your request is properly formed but you have insufficient permissions to access a resource, 
+    our APIs will return a 401: Forbidden error. 
+</p>
+<p>
+    If your request is properly formed and you have the sufficient permissions but your 
+    parameters did not pass validation, we will return a 400: Bad Request error accompanied by which parameters failed validation and why.
+</p>
+<p>
+    As always, we are always available if you run into trouble, so do not hesitate to <a href="mailto:EMAIL">contact us</a>.
+</p>
+<br/>
+
+{% endblock guide_content %}

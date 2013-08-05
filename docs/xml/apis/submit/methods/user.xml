@@ -1,0 +1,173 @@
+<Method>
+    <Name>user</Name>
+    <Category>Resources</Category>
+    <HttpMethod>POST</HttpMethod>
+    <ShortDescription>
+        Adds a user and their reputation data to the LRG database. Also used to update the information for 
+        previously added users.
+    </ShortDescription>
+    <Description>
+Adds a user and their reputation data to the Legit database. If that user has previously been added, it updates that user's information.
+Whether a user is already in the database is determined by the id parameter. This parameter is the id that your organization uses to
+uniquely identify users. 
+
+This method takes a large number of personal identifiers. The more identifiers associated with a user, the easier it is to
+correlate that user with other users within the Legit database. As such, always submit as many identifiers for a user as you have available.
+    </Description>
+    <Parameters>
+        <Parameter>
+            <Name>user_id</Name>
+            <Required>True</Required>
+            <Description>
+Unique ID used by your organization to identity this user. Must be unique in the context of the marketplace.
+If no user with this ID is found in the LRG database, a new user is created. If a matching use is found, that
+user's information is updated according to the rest of the provided parameters. 
+            </Description>
+            <ExampleValue>12344553, robboyle</ExampleValue>
+        </Parameter>
+        <Parameter>
+            <Name>name</Name>
+            <Required>False</Required>
+            <Description>The user's full name.</Description>
+            <ExampleValue>Rob Boyle</ExampleValue>
+        </Parameter>
+        <Parameter>
+            <Name>address</Name>
+            <Required>False</Required>
+            <Description>User's street address.</Description>
+            <ExampleValue>123 1st St. Chicago, IL 60611</ExampleValue>
+        </Parameter>
+        <Parameter>
+            <Name>phone_number</Name>
+            <Required>False</Required>
+            <Description>User's phone number. Must follow the E.164 format of +[country code][area code][phone number].</Description>
+            <ExampleValue>+14157891254</ExampleValue>
+        </Parameter>
+        <Parameter>
+            <Name>email</Name>
+            <Required>False</Required>
+            <Description>User's email address. </Description>
+            <ExampleValue>robboyle@awesomemail.com</ExampleValue>
+        </Parameter>
+        <Parameter>
+            <Name>ssn</Name>
+            <Required>False</Required>
+            <Description>
+User's social security number. Must consist only of numeric digits with out spaces, periods, or dashes.
+            </Description>
+            <ExampleValue>123121234</ExampleValue>
+        </Parameter>
+        <Parameter>
+            <Name>drivers_license</Name>
+            <Required>False</Required>
+            <Description>User's drivers license number. Must follow the format of [state abbreviation]:[license number]</Description>
+            <ExampleValue>CA:D12312345</ExampleValue>
+        </Parameter>
+        <Parameter>
+            <Name>facebook_id</Name>
+            <Required>False</Required>
+            <Description>
+User's facebook id. Note that this is their facebook user ID, a number, not their facebook username which can be any string.
+            </Description>
+            <ExampleValue>2031135</ExampleValue>
+        </Parameter>
+        <Parameter>
+            <Name>twitter_id</Name>
+            <Required>False</Required>
+            <Description>User's twitter id. Note that this is their twitter ID, a number, not their twitter username/handle.</Description>
+            <ExampleValue>3456345784567</ExampleValue>
+        </Parameter>
+        <Parameter>
+            <Name>linkedin_id</Name>
+            <Required>False</Required>
+            <Description>User's linkedin id. Note that this is their linkedin ID, a number, not their linkedin username.</Description>
+            <ExampleValue>12498235</ExampleValue>
+        </Parameter>
+        <!-- Method specific parameters -->
+        <Parameter>
+            <Name>date_joined</Name>
+            <Required>True</Required>
+            <Description>The date the user joined your marketplace. Should be in the format YYYY-MM-DD.</Description>
+            <ExampleValue>2010-10-30</ExampleValue>
+        </Parameter>
+        <Parameter>
+            <Name>transaction_count</Name>
+            <Required>True</Required>
+            <Description>
+The number of transactions a user has successfully completed on your marketplace.
+            </Description>
+            <ExampleValue>37</ExampleValue>
+        </Parameter>
+        <Parameter>
+            <Name>review_count</Name>
+            <Required>True</Required>
+            <Description>The total number of reviews given for the user on your marketplace.</Description>
+            <ExampleValue>13</ExampleValue>
+        </Parameter>
+        <Parameter>
+            <Name>positive_review_percentage</Name>
+            <Required>True</Required>
+            <Description>
+The percentage of the users reviews which are positive. Which of a users reviews are positive or negative
+is left up to your marketplace. This must be formatted as a decimal value between 0.0 and 100.0.
+            </Description>
+            <ExampleValue>93.0</ExampleValue>
+        </Parameter>
+        <Parameter>
+            <Name>date_blacklisted</Name>
+            <Required>False</Required>
+            <Description>The date the user was blacklisted from your marketplace, if applicable. The date should be formatted as YYYY-MM-DD.</Description>
+            <ExampleValue>2010-10-30</ExampleValue>
+        </Parameter>
+        <Parameter>
+            <Name>reason_code_blacklisted</Name>
+            <Required>False</Required>
+            <Description>
+A standardized reason code accompanying the reason the user was blacklisted. See the blacklist/check method for a 
+[full list of available reason codes](/docs/apis/blacklist/check#reason_codes).
+            </Description>
+            <ExampleValue>THEFT</ExampleValue>
+        </Parameter>
+        <Parameter>
+            <Name>reason_blacklisted</Name>
+            <Required>False</Required>
+            <Description>
+The reason the user was blacklisted. This is not standardized standardized and is simply a plain, human readable 
+reason you felt it necessary to permanently remove the user from your system. Allows for a more detailed explanation
+than the standardized code provided. Keep in mind that this reason will be published to other LRG members. 
+            </Description>
+            <ExampleValue>Repeated damage to goods belonging to other users with refusal to assume responsibility.</ExampleValue>
+        </Parameter>
+        <Parameter>
+            <Name>severity</Name>
+            <Required>False</Required>
+            <Description>
+A numeric assessment of the severity of the infraction(s) that lead to the user being blacklisted. Value must be
+between 1 and 5. Selecting the severity is left to your discretion, with 1 indicating the least severe infraction that
+can still lead to a user being banned, and 5 indicating the most severe infraction possible within the context of your
+organization.
+            </Description>
+            <ExampleValue>4</ExampleValue>
+        </Parameter>
+    </Parameters>
+    <ExampleRequest>
+        <RequestData>
+            id=12344553&amp;name=Rob+Boyle&amp;address=123+Michigan+Ave%2C+Chicago+IL+60611
+            &amp;phone_number=%2B141512312345&amp;email=robboyle%40awesomemail.com
+            &amp;ssn=123121234&amp;drivers_license=CA%3A1231234&amp;facebook_id=2031135
+            &amp;twitter_id=3456345784567&amp;linkedin_id=12498235
+            &amp;date_joined=2010-10-30&amp;num_transactions=37&amp;num_reviews=13
+            &amp;positive_review_percentage=93.0&amp;date_blacklisted=2010-10-30
+            &amp;reason_blacklisted=Repeated+damage+to+goods+belonging+to+other+users+with+refusal+to+assume+responsibility.
+            &amp;severity=4&amp;reason_code_blacklisted=MISUSE
+        </RequestData>
+        <ResponseContent>
+200 OK
+
+{
+    "id": 12344553,
+    "is_new": true, # This will be false if the user was already in the database.
+}
+        </ResponseContent>
+    </ExampleRequest>
+</Method>

@@ -1,0 +1,81 @@
+{% extends "docs/api_base.html" %}
+
+{% set active_method = method_name %}
+{% block api_content %}
+{# <ul class="breadcrumb"> #}
+{#     <li><a href="{{ uri_for('doc_apis') }}">API Reference</a> <span class="divider">/</span></li> #}
+{#     <li><a href="{{ uri_for('doc_apis') }}#{{ api_name }}">{{ api_name|capitalize }}</a> <span class="divider">/</span></li> #}
+{#     <li class="active">{{ method_http_method }} {{ method_name }}</li> #}
+{# </ul> #}
+
+<h1>{{ method_http_method }} {{ method_name }}</h1>
+<br/>
+<p>{{ method_description|markdown|safe }}</p>
+<br/>
+
+<h3>Resource URL</h3>
+<p>{{ api_baseURL }}{{ method_name }}</p>
+<br/>
+
+<h3>HTTP Method</h3>
+<p>{{ method_http_method}}</p>
+<br/>
+
+<h3>Parameters</h3>
+<table class="parameter-table table table-bordered table-striped">
+    <tbody>
+        {% for parameter in method_parameters %}
+            <tr>
+                <td class="resource">
+                    <p><strong>{{ parameter['name'] }}</strong><br/>
+                    <span class="muted">{% if parameter['required'] %}required{% else %}optional{% endif %}</span></p>
+                </td>
+                <td>
+                    <p>{{ parameter['description']|markdown|safe }}</p>
+                    <p><strong>Example Value:</strong> {{ parameter['example_value'] }}</p>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% for section in method_sections %}
+<h3 id="{{section['name']|replace(' ', '_')|lower}}">{{ section["name"] }}</h3>
+<p>{{ section["content"]|markdown|safe }}</p>
+{% if section["table"] %}
+    <table class="table table-bordered">
+        <tbody>
+        {% for key, value in section["table"] %}
+            <tr>
+                <td><strong>{{ key }}</strong></td>
+                <td>{{ value }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endif %}
+<br/>
+{% endfor %}
+
+<h3>Example Request</h3>
+<div class="row">
+    <div class="span1">
+        <p>{{ method_http_method }}</p>
+    </div>
+    <div class="span4">
+        <p>{{ api_baseURL }}{{ method_name }}</p>
+    </div>
+</div>
+<br/>
+
+<h5>Request Data</h5>
+<div>{{ method_example_data }}</div>
+<br/>
+
+<h5>Response</h5>
+<pre class="prettyprint">
+{{ method_example_response|trim}}
+</pre>
+<br/>
+
+{% endblock api_content %}

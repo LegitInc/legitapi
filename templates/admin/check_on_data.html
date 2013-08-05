@@ -1,0 +1,9 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+<h1>Checking on the Data</h1>
+<hr/>
+API Users: {{ api_user_count }}<br/>
+Sandbox Users: {{ sandbox_user_count }}<br/>
+Total Users: {{ total_user_count }}<br/>
+{% endblock content %}

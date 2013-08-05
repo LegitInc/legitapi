@@ -1,0 +1,180 @@
+{% extends "guides/guide_base.html" %}
+
+{% set active_guide = 'submitting' %}
+
+{% block guide_content %}
+<h1>Submitting Data</h1>
+<hr/>
+<p>
+    Data is submitted to Legit using the <a href="{{ uri_for('doc_apis')}}#submit">submit methods</a>.
+    These methods take two kinds of information:
+        <ul>
+            <li><strong>Identifying</strong> information to correlate the user across organizations.</li>
+            <li><strong>Reputation</strong> information regarding the user's activity with your organization.</li>
+        </ul>
+</p>
+<br/>
+
+<h3>How and When to Submit Data</h3>
+<p>
+    We do not dictate how you extract this information from your database, or how often you submit 
+    new information to our API. However, we recommend:
+    <ul>
+        <li>Ideally fresh data is submitted to Legit in an event-based manner when a user's information
+            is updated. If this is not possible, setting up a scheduled process that sends daily updates
+            on all users with new reputation data is fine.
+        </li>
+        <li>To avoid impacting your organization, we recommend setting up an independent, asynchronous process that
+            either sends updates to Legit when a user has new reputation activity, or sends 
+            periodic batch updates nightly. 
+        </li>
+    </ul>
+</p>
+<br/>
+
+<h2>Step by Step User Data Submission</h2>
+<p>
+    We'll walk through submitting a user and their reputation data to the 
+    <a href="{{ uri_for('doc_api_method', api_name='submit', method_name='user') }}">user method</a> for 
+    the first time. The code samples in this guide are written in python, but should easily translate
+    to other languages.
+</p>
+<br/>
+
+<h3>Pulling Data from your Database</h3>
+<p>
+    We won't go into detail as to how to pull the information needed for the user method from
+    your database. We'll assume you have written code to collect the following data for a user.
+</p>
+<div class="tabbable"> <!-- Only required for left/right tabs -->
+  <ul class="nav nav-tabs">
+    <li class="active"><a>Python</a></li>
+  </ul>
+  <div class="tab-content">
+    <div class="tab-pane active" id="tab1">
+		<pre class="prettyprint lang-python">
+USER_ID =               123456  # This is the id used by YOUR marketplace to identity the user 
+USER_NAME =             "Rob Boyle"
+USER_EMAIL =            "robboyle@awesomemail.com"
+USER_FACEBOOK_ID =      "2043646"
+USER_DRIVERS_LICENSE =  "CA:1231234"
+
+DATE_JOINED =           "2010-02-17"
+NUM_TRANSACTIONS =      45
+NUM_REVIEWS =           17
+POS_REVIEW_PERCT =      87.23
+        </pre>
+    </div>
+  </div>
+</div>
+<p>
+    The identifiers shown are only examples. Which identifiers you have for a user may vary. 
+    Submit as many identifiers for a user as possible, as this makes correlating the user across
+    organizations substantially easier. The list of accepted identifiers is on the documentation 
+    page for the user method. 
+</p>   
+<br/>
+    
+<h3>Setting up Authentication</h3>
+<p>
+    Since all Legit API requests are authenticated using OAuth, before making the call we need set up
+    authentication. To authenticate a call you will need your consumer key and secret, which can be 
+    found on your <a href="{{ uri_for('profile') }}">profile page</a>. We'll also be using the excellent 
+    <a href="https://github.com/simplegeo/python-oauth2">python-oauth2</a> library in these code snippets.
+    You can find a library for your language of choice on the <a href="http://oauth.net/code/">oauth.net code page</a>.
+</p>
+<div class="tabbable"> <!-- Only required for left/right tabs -->
+  <ul class="nav nav-tabs">
+    <li class="active"><a>Python</a></li>
+  </ul>
+  <div class="tab-content">
+    <div class="tab-pane active" id="tab1">
+		<pre class="prettyprint lang-python">
+import oauth2
+
+CONSUMER_KEY =      "thekeyfromyourprofilepage"
+CONSUMER_SECRET =   "thesecretfromyourprofilepage"
+
+oauth_consumer = oauth2.Consumer(key=CONSUMER_KEY, secret=CONSUMER_SECRET)
+        </pre>
+    </div>
+  </div>
+</div>
+<br/>
+
+<h3>Making the Request</h3>
+<p>
+    Now that we have the data we want to send and an authenticated consumer, we can make our request.
+    The mechanics of this step will vary depending on your language/library, but will likely follow the same pattern: 
+</p>
+<div class="tabbable"> <!-- Only required for left/right tabs -->
+  <ul class="nav nav-tabs">
+    <li class="active"><a>Python</a></li>
+  </ul>
+  <div class="tab-content">
+    <div class="tab-pane active" id="tab1">
+		<pre class="prettyprint lang-python">
+request_url = "https://API_URL/api/submit/user"
+request_data = {
+    "user_id": USER_ID,
+    "name": USER_NAME,
+    "email": USER_EMAIL,
+    "facebook_id": USER_FACEBOOK_ID,
+    "drivers_license": USER_DRIVERS_LICENSE,
+    
+    "date_joined": DATE_JOINED,
+    "transaction_count": NUM_TRANSACTIONS,
+    "review_count": NUM_REVIEWS,
+    "positive_review_percentage": POS_REVIEW_PERCT,
+}    
+
+client = oauth2.Client(oauth_consumer)
+
+import urllib
+
+# Make the request!
+resp, content = client.request(request_url, "POST", urllib.urlencode(request_data))
+        </pre>
+    </div>
+  </div>
+</div>
+<br/>
+
+<p>
+    If the request succeeded, the <code>resp</code> variable will contain the value
+    200, signifying a successful request. In the case of a successful request, the
+    <code>content</code> variable will hold a simple JSON response. In the case of
+    success, this JSON object will simply echo the ID of the user submitted as well
+    as provide a boolean indicating whether the user was added for the first time:    
+</p>
+<pre class="prettyprint">
+{
+    "id": 123456,
+    "is_new": true,
+}
+</pre>
+<p>
+    For more details on this and other submit methods, see the 
+    <a href="{{ uri_for('doc_apis') }}#submit">API Documentation</a>.
+</p>
+
+{% endblock guide_content %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

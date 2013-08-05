@@ -1,0 +1,38 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+<h1>Intake Analysis</h1>
+<hr/>
+{# <div style="text-align: center"> #}
+{#     <form action="{{ url_for('analysis') }}" method="POST"> #}
+{#         <button type="submit" class="btn">Start the Reactor</button> #}
+{#     </form> #}
+{# </div> #}
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Organization</th>
+            <th>Total Users</th>
+            <th>Analyzed Users</th>
+            <th>CSV</th>
+            <th>Analysis</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for org_name, org_info in orgs_info.items() %}
+            <tr>
+                <td>{{ org_name }}</td>
+                <td>{{ org_info["total_users"] }}</td>
+                <td>{{ org_info["analyzed_users"] }}</td>
+                <td><a href="{{ url_for('get_csv', org_name=org_name) }}">Download CSV</a></td>
+                <td>
+                    <form action="{{ url_for('analysis') }}" method="POST">
+                        <button type="submit" class="btn">Analyze Org</button>
+                        <input type="hidden" name="org_key" value="{{ org_info['org_key'] }}">
+                    </form>
+                </td>                
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock content %}

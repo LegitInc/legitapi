@@ -1,0 +1,129 @@
+{% extends "guides/guide_base.html" %}
+
+{% set active_guide = 'querying' %}
+{% block guide_content %}
+<h1>Making a Query</h1>
+<hr/>
+<p>
+	We'll walk through making a request to the 
+	<a href="{{ uri_for('doc_api_method', api_name='identity', method_name='risk' )}}">
+		identity/risk</a> method. 
+	This method is used to
+	get an assessment of the risk and validity of a presented identity. You can read more about it in
+	the <a href="{{ uri_for('doc_api_method', api_name='identity', method_name='risk' )}}">
+		identity/risk documentation</a>.
+</p>
+<br/>
+<h3>Assembling the Query Parameters</h3>
+<p>
+    We won't go into detail as to how to gather a user's identity elements for a request. They could be collected as part
+    of user signup or as part of a manual review process. 
+</p>
+<p>
+    The more user identifiers available for a user, the better the results of an identity/risk query. 
+	As such, always submit as many pieces of identity data as possible. 
+</p>
+
+<br/>
+
+<h3>Setting up Authentication</h3>
+<p>
+    All Legit API requests are authenticated using OAuth. Before making the request we need set up
+    authentication. To authenticate a call you will need your consumer key and secret, which can be 
+    found on your <a href="{{ uri_for('profile') }}">profile page</a>. 
+</p>
+<p>
+	You can find an OAuth library for your language of choice on the <a href="http://oauth.net/code/">oauth.net code page</a>.
+</p>
+<div class="tabbable"> <!-- Only required for left/right tabs -->
+  <ul class="nav nav-tabs">
+    <li class="active"><a>Python</a></li>
+  </ul>
+  <div class="tab-content">
+    <div class="tab-pane active" id="tab1">
+		<pre class="prettyprint lang-python">
+# Here we use the excellent python-oauth2 library (https://github.com/simplegeo/python-oauth2)
+import oauth2
+
+CONSUMER_KEY =      "thekeyfromyourprofilepage"
+CONSUMER_SECRET =   "thesecretfromyourprofilepage"
+
+oauth_consumer = oauth2.Consumer(key=CONSUMER_KEY, secret=CONSUMER_SECRET)</pre>
+    </div>
+    <div class="tab-pane" id="tab2">
+      <pre class="prettyprint lang-ruby">Coming Soon</pre>
+    </div>
+    <div class="tab-pane" id="tab3">
+      <pre class="prettyprint lang-java">Coming Soon</pre>
+    </div>
+  </div>
+</div>
+
+<br/>
+
+<h3>Making the Request</h3>
+<p>
+    Now that we have an authenticated consumer, we can make our request.
+    The resource we will be requesting is the <b>identity/risk</b> resource, which
+	returns the validity and risk of a presented identity.
+</p>
+<p>
+    The mechanics of this step will vary depending on your language/library, but will likely follow the same pattern: 
+</p>
+<div class="tabbable"> <!-- Only required for left/right tabs -->
+  <ul class="nav nav-tabs">
+    <li class="active"><a>Python</a></li>
+  </ul>
+  <div class="tab-content">
+    <div class="tab-pane active" id="tab1">
+		<pre class="prettyprint lang-python">
+request_url = "https://API_URL/api/v1/identity_risk"
+request_data = {
+	"first_name": "Rob",
+	"last_name": "Boyle",
+	"email": "rob@awesomemail.com"
+	...
+}    
+
+client = oauth2.Client(oauth_consumer)
+
+import urllib
+
+# Make the request!
+status_code, content = client.request(request_url, "GET", urllib.urlencode(request_data))</pre>
+    </div>
+    <div class="tab-pane" id="tab2">
+      <pre class="prettyprint lang-ruby">Coming Soon</pre>
+    </div>
+    <div class="tab-pane" id="tab3">
+      <pre class="prettyprint lang-java">Coming Soon</pre>
+    </div>
+  </div>
+</div>
+<br/>
+
+<p>
+    If the request succeeded, the status code will be 200, signifying a successful request. 
+	In the case of a successful request, content be a JSON response with the information found
+    for the user in the LRG database. An example response for the request shown above
+    might be:
+</p>
+<pre class="prettyprint lang-python">
+{
+    "id_score": 85,
+    "negative_codes": [
+        "Address:High_Recent_Applications",
+    ]
+    "positive_codes": [
+        "Email:Historic_Low_Risk",
+        "Phone:Zip_Match",
+    ]
+}
+</pre>
+<br/>
+
+<p>
+    For more details on this and other query methods, see the 
+    <a href="{{ uri_for('doc_apis') }}#query">API Documentation</a>.
+</p>
+{% endblock guide_content %}

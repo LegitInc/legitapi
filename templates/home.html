@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% set active_nav = "home" %}
+{% block content %}
+<div class="hero-unit">
+    <h1>Welcome!</h1>
+    <p>To the Legit Developer Portal. Start with the <a href="{{ uri_for('overview') }}">overview</a>. Dive into detail with the 
+    <a href="{{ uri_for('doc_apis') }}">API docs</a>. If you need help with
+    anything, don't hesitate to <a href="mailto:EMAIL">contact us</a>.</p>
+</div>
+<div class="row">
+    <div class="span6">
+        <h2>Guides</h2>
+        <p>Guides to working with the Legit API.</p>
+        <ul>
+            <li><a href="{{ uri_for('overview') }}">Overview of the API</a></li>
+            <li><a href="{{ uri_for('querying') }}">Making your first query</a></li>
+            <li><a href="{{ uri_for('submitting') }}">Submitting Data</a></li>
+            <li><a href="{{ uri_for('authentication') }}">Authentication in detail</a></li>            
+        </ul>
+    </div>
+    <div class="span6">
+        <h2>API Documentation</h2>
+        <p>Reference documentation for all of our API methods.</p>
+        <ul>
+            <li><a href="{{ uri_for('doc_apis') }}">API Documentation</a></li>
+        </ul>    
+    </div>
+</div>
+<br/>
+
+{% endblock content %}

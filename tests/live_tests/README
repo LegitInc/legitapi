@@ -1,0 +1,8 @@
+These tests shouldn't harm the live database. The app SHOULD be configured
+to ignore data submitted by these tests.
+
+STILL, to avoid impacting the live app, the procedure for testing the live environment is:
+1. Deploy a NEW VERSION of the app
+2. Run live tests against this NEW VERSION
+3. Clear out any data created by the tests
+4. Change the default version of the app to the NEW VERSION

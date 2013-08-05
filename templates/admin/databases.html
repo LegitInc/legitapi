@@ -1,0 +1,31 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+<h1>Databases</h1>
+<hr/>
+<form action="{{ url_for('databases') }}" method="POST" class="form-horizontal">
+    <fieldset>
+        {{ fancy_with_errors(form.db_id)}}
+    </fieldset>
+    <div class="form-actions">
+        <button type="submit" class="btn">Create Database</button>
+    </div>
+</form>
+<h3>Current Databases</h3>
+<div>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Key</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for db in dbs %}
+            <tr>
+                <td>{{ db.key }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock content %}

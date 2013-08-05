@@ -1,0 +1,81 @@
+{% macro fancy_with_errors(field, help_text=None) %}
+    <div class="control-group {% if field.errors %}error{% endif %}">
+        {{ field.label(class="control-label") }}
+        <div class="controls">
+            {{ field(**kwargs) }}
+            {% if field.errors %}
+                <ul class="help-block">{% for error in field.errors %}<li>{{ error|e }}</li>{% endfor %}</ul>
+            {% endif %}
+            {% if help_text %}
+            <p class="help-block">
+                {{ help_text|safe }}
+            </p>
+            {% endif %}            
+        </div>
+    </div>
+{% endmacro %}
+
+<!DOCTYPE html>
+<html>
+<head>
+{% block head %}
+    <title>{% block title %}Welcome to the Jungle{% endblock title %}</title>
+    
+    <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.css" />    
+    
+    <script src="/static/js/jquery-1.7.1.min.js"></script>
+    <script src="/static/js/highcharts.js"></script>
+{% endblock head %}
+</head>
+<body>
+    <div class="navbar">
+        <div class="navbar-inner">
+            <div class="container">
+                <span class="brand">Legit Admin Treehouse - NO GIRLS ALLOWED</span>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid" style="padding: 20px;">
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert">{{ message}}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        <div class="row-fluid">
+            <div class="span2">
+                {% set usefulitems = [("Invites", "invite_management"),
+                                          ("Organizations", "organizations_management"),
+                                          ("Developers", "developers_management"),
+                                          ("Analysis", "analysis"),
+                                          ("Query", "query"), 
+                                          ("Prices", "prices_management"),
+										  ("Request Log", "request_log")] %}
+
+                {% set dangeritems = [("Intake Upload", "intake_users"),
+                                         ("Test Data", "test_data"), 
+                                         ("Data Quality", "data_quality"),
+                                         ("Proving Value", "value"), 
+                                         ("Run Task", "run_task"), 
+                                         ("MapReduce", "mapreduce_processing")] %}
+                <div class="well pull-right" style="padding: 8px 0;">
+                    <ul class="nav nav-list">
+                        <li class="nav-header">Useful Tools</li>
+                        {% for name, url in usefulitems %}
+                            <li><a href="{{ url_for(url)}}">{{name}}</a></li>
+                        {% endfor %}           
+                        <li class="nav-header">Danger, Will Robinson</li>
+                        {% for name, url in dangeritems %}
+                            <li><a href="{{ url_for(url)}}">{{name}}</a></li>
+                        {% endfor %}
+                    </ul>     
+                </div>
+            </div>
+            <div class="span10">
+                {% block content %}{% endblock content %}                
+            </div>
+        </div>
+    </div>
+</body>
+</html>

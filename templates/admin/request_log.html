@@ -1,0 +1,38 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+<h1>Request Log</h1>
+<hr/>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Created</th>
+            <th>Resource</th>
+            <th>Parameters</th>
+            <th>Developer</th>
+            <th>Organization</th>
+            <th>Price</th>
+            <th>Actually Charged</th>
+            <th>Response Code</th>
+            <th>Response</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for request in requests %}
+        <tr>
+            <td>{{ request.created }}</td>
+            <td>{{ request.request_resource.split("/")[-1] }}</td>
+            <td>{{ request.request_parameters }}</td>
+            {% set dev = request.developer.get() %}
+            {% set org = dev.org.get() %}
+            <td><a href="{{ url_for('developer_management', developer_key=dev.key.urlsafe()) }}">{{ dev.email }}</a></td>
+            <td><a href="{{ url_for('organization_management', organization_key=org.key.urlsafe()) }}">{{ org.full_name }}</a></td>
+            <td>{{ request.price }}</td>
+            <td>{{ request.actually_charged }}</td>
+            <td>{{ request.response_code }}</td>
+            <td>{{ request.response_json or request.response_text }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock content %}

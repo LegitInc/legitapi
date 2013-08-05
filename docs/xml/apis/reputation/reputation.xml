@@ -1,0 +1,14 @@
+<API>
+    <Name>Reputation</Name>
+    <Description>
+        The query methods allow you to obtain reputation data from the LRG database. This reputation data spans the user's
+        activity across all the marketplaces in the LRG.
+    </Description>
+    <BaseURL>https://APP_URL/api/v1/reputation/</BaseURL>
+    <Categories>
+        <Category>
+            <Name>Resources</Name>
+            <Description>Methods for querying reputation data gathered from LRG members.</Description>
+        </Category>
+    </Categories>
+</API>

@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% set active_nav = "signup" %}
+{% block content %}
+<h1>Sign Up for a Developer Account</h1>
+<hr/>
+<div class="row">
+    <div class="span6">
+        {% for message in messages['local'] %}
+            <p class="alert alert-error">{{ message }}</p>
+        {% endfor %}
+        <form method="POST" action="{{ uri_for('signup') }}" class="form-horizontal">
+            <fieldset>
+                {{ fancy_with_errors(form.name) }}
+                {{ fancy_with_errors(form.email) }}
+                {{ fancy_with_errors(form.password) }}
+                {{ fancy_with_errors(form.invite_code) }}
+            </fieldset>    
+            <div class="form-actions">
+                <button type="submit" class="btn">Sign Up</button>
+            </div>
+        </form>
+    </div>
+    <div class="span5">
+        <div class="well">
+            <h3>Already have an account?</h3>
+            <p>The login page is <a href="{{ uri_for('login') }}">thatta way</a>.</p>
+        </div>
+        <div class="well">
+            <h3>Need an invite code?</h3>
+            <p><a href="mailto:EMAIL">Contact us</a> to get one.</p>
+        </div>
+    </div>
+</div>
+ 
+{% endblock %}

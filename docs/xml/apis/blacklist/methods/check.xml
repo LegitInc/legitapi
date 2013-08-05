@@ -1,0 +1,166 @@
+<Method>
+    <Name>check</Name>
+    <Category>Resources</Category>
+    <HttpMethod>GET</HttpMethod>
+    <ShortDescription>Checks whether a user has been banned from any LRG marketplaces.</ShortDescription>
+    <Description>
+Queries the LRG blacklist to see if a user has been banned from any LRG marketplaces. 
+Will return both aggregate blacklistings as well as blacklistings broken down by
+marketplace type.
+
+If a blacklisting is found, the reason, date, and severity of the infraction that cause the ban
+will listed.
+
+There is no minimum amount of identifying information required, but the more identity parameters provided
+the higher the probability of finding a match within the LRG blacklist.
+    </Description>
+    <Parameters>
+        <Parameter>
+            <Name>name</Name>
+            <Required>False</Required>
+            <Description>The user's full name.</Description>
+            <ExampleValue>Rob Boyle</ExampleValue>
+        </Parameter>
+        <Parameter>
+            <Name>address</Name>
+            <Required>False</Required>
+            <Description>User's street address.</Description>
+            <ExampleValue>123 1st St. Chicago, IL 60611</ExampleValue>
+        </Parameter>
+        <Parameter>
+            <Name>phone_number</Name>
+            <Required>False</Required>
+            <Description>User's phone number. Must follow the E.164 format of +[country_code][area_code][phone_number].</Description>
+            <ExampleValue>+14157891254</ExampleValue>
+        </Parameter>
+        <Parameter>
+            <Name>email</Name>
+            <Required>False</Required>
+            <Description>User's email address. </Description>
+            <ExampleValue>robboyle@awesomemail.com</ExampleValue>
+        </Parameter>
+        <Parameter>
+            <Name>ssn</Name>
+            <Required>False</Required>
+            <Description>
+User's social security number. Must consist only of numeric digits with out spaces, periods, or dashes.
+            </Description>
+            <ExampleValue>123121234</ExampleValue>
+        </Parameter>
+        <Parameter>
+            <Name>drivers_license</Name>
+            <Required>False</Required>
+            <Description>User's drivers license number. Must follow the format of [state abbreviation]:[license number]</Description>
+            <ExampleValue>CA:D12312345</ExampleValue>
+        </Parameter>
+        <Parameter>
+            <Name>facebook_id</Name>
+            <Required>False</Required>
+            <Description>
+User's facebook id. Note that this is their facebook user ID, a number, not their facebook username which can be any string.
+            </Description>
+            <ExampleValue>2031135</ExampleValue>
+        </Parameter>
+        <Parameter>
+            <Name>twitter_id</Name>
+            <Required>False</Required>
+            <Description>User's twitter id. Note that this is their twitter ID, a number, not their twitter username/handle.</Description>
+            <ExampleValue>3456345784567</ExampleValue>
+        </Parameter>
+        <Parameter>
+            <Name>linkedin_id</Name>
+            <Required>False</Required>
+            <Description>User's linkedin id. Note that this is their linkedin ID, a number, not their linkedin username.</Description>
+            <ExampleValue>12498235</ExampleValue>
+        </Parameter>
+    </Parameters>
+    <ExplanatorySection>
+        <Name>Severity</Name>
+        <Content>
+Each blacklisting is accompanied by a severity. This is a number between 1 and 5 
+indicating the severity of the infraction that lead to the user being blacklisted.
+Severity codes are set by the organization reporting the blacklisting, and as such are
+not strictly standardized. 
+        </Content>
+    </ExplanatorySection>
+    <ExplanatorySection>
+        <Name>Reason Codes</Name>
+        <Content>
+Each blacklisting carries a standardized reason code indicating the reason the user
+was banned from the marketplace. The table below gives the full list of reason codes
+that can be specified.
+        </Content>
+        <TabularContent>
+            <Entry>
+                <Key>THEFT</Key>
+                <Value>
+A user stole property from another person. 
+Example: A user rented a car on a peer-to-peer car sharing network, borrowed the car, and stole the car 
+owner’s personal property during the rental.
+                </Value>
+            </Entry>
+            <Entry>
+                <Key>MISUSE</Key>
+                <Value>
+A user abused the primary use case of a particular marketplace.
+Example:  A user rented a house on a peer-to-peer house sharing network to sell illegal substances.
+                </Value>
+            </Entry>
+            <Entry>
+                <Key>OFFENSIVE</Key>
+                <Value>
+A user was rude, obnoxious or unpleasant to another user.
+Example: A passenger in a ridesharing community verbally assaulted the driver during the journey when the 
+driver was not able to drop the passenger off at their desired destination.
+                </Value>
+            </Entry>
+            <Entry>
+                <Key>UNRELIABLE</Key>
+                <Value>
+A user did not fulfill obligations to the community.
+Example: A user of a short-term labor community no-shows to an appointment three instances in a row.
+                </Value>
+            </Entry>
+            <Entry>
+                <Key>FRAUD</Key>
+                <Value>
+A user attempted to commit identity or payment fraud.
+Example: A user registered to a car sharing service under an alias.
+                </Value>
+            </Entry>
+            <Entry>
+                <Key>NONPAYMENT</Key>
+                <Value>
+A user failed to pay for services
+Example: A user’s credit card was declined after several transactions were previously processed.
+                </Value>
+            </Entry>
+        </TabularContent>
+    </ExplanatorySection>
+    <ExampleRequest>
+        <RequestData>
+            name=Rob+Boyle&amp;address=123+Michigan+Ave%2C+Chicago+IL+60611
+            &amp;phone_number=%2B141512312345&amp;email=robboyle%40awesomemail.com
+            &amp;ssn=123121234&amp;drivers_license=CA%3A1231234&amp;facebook_id=2031135
+            &amp;twitter_id=3456345784567&amp;linkedin_id=12498235
+        </RequestData>
+        <ResponseContent>
+200 OK
+
+{    
+    "blacklist": {
+        "blacklisting_count": 1,
+        "blacklistings": [
+            {
+                "marketplace_type": "Toaster Sharing",
+                "date": "2010-04-15",
+                "severity": 5,
+                "reason_code": "THEFT",
+                "reason": "Repeated theft of goods from other members."
+            },
+        ],
+    }
+}            
+        </ResponseContent>
+    </ExampleRequest>
+</Method>

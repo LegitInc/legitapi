@@ -1,0 +1,43 @@
+{% extends "docs/api_base.html" %}
+
+{% block api_content %}
+{# <ul class="breadcrumb"> #}
+{#     <li><a href="{{ uri_for('doc_apis') }}">API Reference</a> <span class="divider">/</span></li> #}
+{#     <li class="active">{{ api_name }} API</li> #}
+{# </ul> #}
+
+<h1>{{ api_name }} API</h1>
+<br/>
+<p>{{ api_description }}</p>
+<br/>
+<p>The base url for this API is <strong>{{ api_baseURL }}</strong>.</p>
+<br/>
+{% for category in api_categories %}
+<h3 id="{{ category['name'] }}" class="api-category">{{ category['name'] }}</h3>
+<p>{{ category['description'] }}</p>
+<table class="api-table table table-bordered">
+    <thead>
+        <tr>
+            <th>
+                Resource
+            </th>
+            <th>
+                Description
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for method in category['methods'] %}
+            <tr>
+                <td class="resource">
+                    <a href="{{ uri_for('doc_api_method', api_name=api_name|lower, method_name=method['name']|lower ) }}">
+                        {{ method['httpmethod'] }} {{ method['name']}}
+                    </a>
+                </td>
+                <td>{{ method['short_description'] }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>    
+{% endfor %}
+{% endblock api_content %}

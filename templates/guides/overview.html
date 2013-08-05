@@ -1,0 +1,69 @@
+{% extends "guides/guide_base.html" %}
+
+{% set active_guide = 'overview' %}
+{% block guide_content %}    
+<h1>Overview of the API</h1>
+<hr/>
+
+<p>
+    The Legit API lets Legit partners obtain identity risk and reputation information from Legit. 
+	It also allows them to submit reputation data that they have collected from their users. 
+</p>
+<p>
+    All API methods are provided as web services.   
+</p>
+<br/>
+
+<h3>Querying Data</h3>
+<p>
+    Identity risk and reputation data is made available through the <strong>query methods</strong>. 
+    This information is used to verify and assess the risk of presented identities.
+</p>
+<p>
+    Read more about <a href="{{uri_for('querying')}}">querying data</a>.
+</p>
+<br/>
+
+<h3>Submitting Data</h3>
+<p>    
+    The <strong>submit methods</strong> let partners submit reputation data to Legit.
+    Submitted data is combined with data sent in by other partners. The resulting aggregate reputation strengthens the data
+	made available through the query methods.
+</p>
+<p>
+    Read more about <a href="{{ uri_for('submitting') }}">submitting data</a>.
+</p>
+<br/>
+    
+<h3>Authentication</h3>
+<p>
+Authentication for all methods is done using OAuth 1.0a. When you signed up for a developer account you
+were assigned OAuth credentials for accessing the API. These can be found on your <a href="{{ uri_for('profile') }}">profile page</a>.
+</p>
+<p>Read more about <a href="{{ uri_for('authentication')}}">authenticating</a>.</p>
+<br/>
+
+{# <h3>The First Step</h3> #}
+{# <p> #}
+{# The first step is to <a href="{{ uri_for('signup') }}">create a developer account</a>. #}
+{# To sign up, you will need an invite code, which you will receive upon joining the LRG</a>.  #}
+{# After creating an account, read the rest of the guides and then dive into the <a href="{{ uri_for('doc_apis') }}">API documentation</a>. #}
+{# </p> #}
+    
+{% endblock guide_content %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

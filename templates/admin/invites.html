@@ -1,0 +1,37 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+<h1>Invite Codes</h1>
+<hr/>
+<form action="{{ url_for('invite_create') }}" method="POST" class="form-horizontal">
+    <fieldset>
+        {{ fancy_with_errors(form.code)}}
+        {{ fancy_with_errors(form.org_name) }}
+    </fieldset>
+    <div class="form-actions">
+        <button type="submit" class="btn">Create Invite Code</button>
+    </div>
+</form>
+
+<h3>Existing Codes</h3>
+<div>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Code</th>
+                <th>Organization</th>
+                <th>Used?</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for code in existing_invites %}
+            <tr>
+                <td>{{ code.code }}</td>
+                <td>{{ code.org.get().full_name }}</td>
+                <td>{{ code.is_used }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock content %}

@@ -1,0 +1,13 @@
+<API>
+    <Name>Blacklist</Name>
+    <Description>
+        The blacklist methods allow you to check whether a user is on the LRG global blacklist.
+    </Description>
+    <BaseURL>https://APP_URL/api/v1/blacklist/</BaseURL>
+    <Categories>
+        <Category>
+            <Name>Resources</Name>
+            <Description>Methods for querying the LRG blacklist.</Description>
+        </Category>
+    </Categories>
+</API>

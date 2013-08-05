@@ -1,0 +1,13 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+<h1>Data Quality</h1>
+<hr/>
+<h3>Reshash the PII</h3>
+<p>This is potentially computationally expensive, so don't do it without good reason.</p>
+<form action="{{ url_for('data_quality') }}" method="POST" class="form-horizontal">
+    <div class="form-actions">
+        <button type="submit" class="btn">Rehash PII</button>
+    </div>
+</form>
+{% endblock content %}

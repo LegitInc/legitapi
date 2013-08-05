@@ -1,0 +1,141 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+<h1>Organization - {{ org.full_name}}</h1>
+<hr/>
+<form action="{{ url_for('organization_management', organization_key=org.key.urlsafe()) }}" method="POST" class="form-horizontal">
+    <fieldset>
+        {{ fancy_with_errors(form.credit)}}
+        {{ fancy_with_errors(form.org_type)}}
+    </fieldset>
+    <div class="form-actions">
+        <button type="submit" class="btn">Update Organization</button>
+    </div>
+</form>
+<table class="table table-bordered">
+    <tbody>
+        <tr>
+            <td><strong>Intake User Count:</strong></td>
+            <td>{{ intake_user_count }}</td>
+        </tr>
+        <tr>
+            <td><strong>Most Recent Update:</strong></td>
+            <td>{{ most_recent_update }}</td>
+        </tr>
+    </tbody>
+</table>
+<h3>PII Stats</h3>
+<div id="pii-chart-container"></div>
+<table class="table table-bordered" style="margin-top: 30px">
+    <tbody>
+        {% for field, value in pii_stats.items()  %}
+            <tr><td><strong>{{ field }}</td><td>{{ value }}</tr>
+        {% endfor %}
+    </tbody>
+</table>
+<h3>Transaction Stats</h3>
+<div id="transaction-chart-container"></div>
+<table class="table table-bordered" style="margin-top: 30px">
+    <tbody>
+        {% for field, value in transaction_stats.items()  %}
+            <tr><td><strong>{{ field }}</td><td>{{ value }}</tr>
+        {% endfor %}
+    </tbody>
+</table>
+<script type="text/javascript">
+var chart;
+$(document).ready(function() {
+	pii_chart = new Highcharts.Chart({
+		chart: {
+			renderTo: 'pii-chart-container',
+			type: 'column'
+		},
+		title: {
+			text: 'Submitted Data PII Breakdown'
+		},
+		subtitle: {
+			text: 'Source: Our Database'
+		},
+		xAxis: {
+			categories: [
+				{% for field, value in pii_stats.items() %}
+				    "{{ field }}",
+				{% endfor %}
+			]
+		},
+		yAxis: {
+			min: 0,
+			title: {
+				text: '# of Users'
+			}
+		},
+		tooltip: {
+			formatter: function() {
+				return ''+
+					this.x +': '+ this.y;
+			}
+		},
+		plotOptions: {
+			column: {
+				pointPadding: 0.2,
+				borderWidth: 0
+			}
+		},
+		legend: false,
+		series: [{
+			data: [
+    		    {% for field, value in pii_stats.items() %}
+    		        {{ value }},
+    		    {% endfor %}
+    		]
+		}]
+	});
+	
+    transaction_chart = new Highcharts.Chart({
+		chart: {
+			renderTo: 'transaction-chart-container',
+			type: 'column'
+		},
+		title: {
+			text: 'Submitted Data Transaction Count Breakdown'
+		},
+		subtitle: {
+			text: 'Source: Our Database'
+		},
+		xAxis: {
+			categories: [
+				{% for field, value in transaction_stats.items() %}
+				    "{{ field }}",
+				{% endfor %}
+			]
+		},
+		yAxis: {
+			min: 0,
+			title: {
+				text: '# of Users'
+			}
+		},
+		tooltip: {
+			formatter: function() {
+				return ''+
+					this.x +': '+ this.y;
+			}
+		},
+		plotOptions: {
+			column: {
+				pointPadding: 0.2,
+				borderWidth: 0
+			}
+		},
+		legend: false,
+		series: [{
+			data: [
+    		    {% for field, value in transaction_stats.items() %}
+    		        {{ value }},
+    		    {% endfor %}
+    		]
+		}]
+	});
+});
+</script>
+{% endblock content %}

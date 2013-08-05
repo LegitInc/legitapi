@@ -1,0 +1,16 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+<h1>Set all the intake users api_type to API</h1>
+<hr/>
+<form action="{{ url_for('set_api') }}" method="POST" class="form-horizontal">
+    <div class="form-actions">
+        <button type="submit" class="btn">Set to API</button>
+    </div>
+</form>
+<div>
+    API Entities: {{ api_count }}<br/>
+    Sandbox Entities: {{ sandbox_count }}<br/>
+    Total Entities: {{total_entities}}
+</div>
+{% endblock content %}

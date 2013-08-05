@@ -1,0 +1,6 @@
+Run these tests with the following command (from the legitapi directory):
+
+nosetests --with-gae --nologcapture --without-sandbox tests/local_tests
+
+I would love to get rid of the --without-sandbox flag, but I don't know how to
+do that and still have pycrypto not break.
